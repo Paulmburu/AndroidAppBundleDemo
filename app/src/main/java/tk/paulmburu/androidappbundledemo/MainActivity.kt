@@ -1,9 +1,11 @@
 package tk.paulmburu.androidappbundledemo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.google.android.play.core.splitinstall.SplitInstallRequest
@@ -21,16 +23,9 @@ class MainActivity : AppCompatActivity() {
 
         splitInstallManager = SplitInstallManagerFactory.create(applicationContext)
 
-        findViewById<Button>(R.id.button_feature1).setOnClickListener(View.OnClickListener {
-            loadFeatureOne()
-        })
-
-        findViewById<Button>(R.id.button_feature2).setOnClickListener(View.OnClickListener {
-            loadFeatureTwo()
-        })
     }
 
-    private fun loadFeatureOne() {
+    fun loadFeatureOne(view: View) {
         var request: SplitInstallRequest =
             SplitInstallRequest.
                 newBuilder()
@@ -44,20 +39,17 @@ class MainActivity : AppCompatActivity() {
         splitInstallManager
             .startInstall(request)
             .addOnSuccessListener ( OnSuccessListener<Int>(){
-                @Override
-                fun onsucess(int: Int){
-                    // Module download successful
-                }
+                // Module download successful
+                var intent = Intent().setClassName(packageName,"tk.paulmburu.feature1.FeatureOneActivity")
+                startActivity(intent)
             } )
             .addOnFailureListener(OnFailureListener {
-                @Override
-                fun onFailure(e: Exception){
-                    // Module download failed; handle the error here
-                }
+                // Module download failed; handle the error here
+                Toast.makeText(applicationContext,"Couldn't download feature1: ${it.message}", Toast.LENGTH_LONG).show()
             })
     }
 
-    private fun loadFeatureTwo() {
+    fun loadFeatureTwo(view: View) {
         var request: SplitInstallRequest =
             SplitInstallRequest.
                 newBuilder()
@@ -71,16 +63,14 @@ class MainActivity : AppCompatActivity() {
         splitInstallManager
             .startInstall(request)
             .addOnSuccessListener ( OnSuccessListener<Int>(){
-                @Override
-                fun onsucess(int: Int){
-                    // Module download successful
-                }
+
+                var intent = Intent().setClassName(packageName,"tk.paulmburu.feature2.FeatureTwoActivity")
+                startActivity(intent)
             } )
             .addOnFailureListener(OnFailureListener {
-                @Override
-                fun onFailure(e: Exception){
-                    // Module download failed; handle the error here
-                }
+//                Toast.makeText(applicationContext,"$", Toast.LENGTH_LONG).show()
+                // Module download failed; handle the error here
+                Toast.makeText(applicationContext,"Couldn't download feature2: ${it.message}", Toast.LENGTH_LONG).show()
             })
     }
 }
